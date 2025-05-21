@@ -11,6 +11,6 @@ class DatabaseConnection:
 
 with DatabaseConnection('airbnb') as db:
     cursor = db.cursor()
-    users  =cursor.execute('SELECT * FROM users')
+    users = cursor.execute('SELECT * FROM users')
     for user in users:
         print(user) 
