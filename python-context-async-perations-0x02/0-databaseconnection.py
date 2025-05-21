@@ -8,3 +8,9 @@ class DatabaseConnection:
         return conn
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.conn.close()
+
+with DatabaseConnection('airbnb') as db:
+    cursor = db.cursor()
+    users  =cursor.execute('SELECT * FROM users')
+    for user in users:
+        print(user) 
