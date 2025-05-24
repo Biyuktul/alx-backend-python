@@ -3,9 +3,9 @@ import pymysql
 def paginate_users(page_size, offset):
     mydb = pymysql.connect(
         host="localhost",
-        user="root",  # or the correct DB user
-        password="5545851170",  # change to your real password
-        database="ALX_prodev"  # replace with your DB name
+        user="root", 
+        password="test",  
+        database="ALX_prodev"  
     )
 
     mycursor = mydb.cursor(pymysql.cursors.DictCursor)
