@@ -7,25 +7,15 @@ def get_all_users():
 
 def stream_users_in_batches(batch_size):
     users = get_all_users()
+
     for i in range(0, len(users), batch_size):
-        for user in users[i:i + batch_size]:
+        batch = users[i:i + batch_size]
+        for user in batch:  # Second loop
             user['age'] = int(user['age'])
-        yield users[i:i + batch_size]
+        yield batch
 
 def batch_processing(batch_size):
-    user_batch = stream_users_in_batches(batch_size)
-
-    while True:
-        try:
-            batch = next(user_batch)
-            for user in batch:
-                if user.get('age', 0) > 119:
-                    print(user)
-        except StopIteration:
-            break
-  
-
-try:
-    batch_processing(50)
-except BrokenPipeError:
-    sys.stderr.close()
+    for batch in stream_users_in_batches(batch_size):
+        for user in batch:
+            if user.get('age', 0) > 25:
+                print(user)
