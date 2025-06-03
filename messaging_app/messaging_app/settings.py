@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  # Only one entry!
+    'django.contrib.staticfiles',
 ]
 
 # Django REST Framework configuration
