@@ -8,12 +8,13 @@ class User(AbstractUser):
     Adds extra fields and uses UUID as primary key.
     The password field is inherited from AbstractUser.
     """
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     # password field is inherited from AbstractUser
 
+    
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     def __str__(self):
