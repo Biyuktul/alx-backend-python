@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-class IsParticipant(BasePermission):
+class IsParticipantOfConversation(BasePermission):
     """
     Custom permission to only allow participants to view message object
     """
