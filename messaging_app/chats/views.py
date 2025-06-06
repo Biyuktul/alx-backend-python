@@ -13,12 +13,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
     ViewSet for managing conversations.
     Provides CRUD operations for conversations.
     """
-    queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter] 
     search_fields = ['participants__username']
     ordering_fields = ['created_at']
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+
+    def get_queryset(self):
+        return Conversation.objects.filter(participants=self.request.user)
 
     def list(self, request, *args, **kwargs):
         """
@@ -48,12 +50,15 @@ class MessageViewSet(viewsets.ModelViewSet):
     ViewSet for managing messages.
     Provides CRUD operations for messages within conversations.
     """
-    queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body', 'sender__username']
     ordering_fields = ['sent_at']
     permission_classes = [IsAuthenticated, IsParticipantOfConversation]
+
+    def get_queryset(self):
+        return Message.objects.filter(conversation__participants=self.request.user)
+
     def list(self, request, *args, **kwargs):
         """
         List all messages with their sender and conversation details.

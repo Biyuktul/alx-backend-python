@@ -1,5 +1,7 @@
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
-class CustomJWTAuthentication(JWTAuthentication):
-    def authenticate(self, request):
-        return super().authenticate(request)
+# You can import and re-export these for urls if preferred
+__all__ = ['TokenObtainPairView', 'TokenRefreshView']
