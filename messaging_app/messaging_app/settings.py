@@ -91,7 +91,7 @@ DATABASES = {
 }
 
 
-AUTH_USER_MODEL = 'chats.CustomUser'
+AUTH_USER_MODEL = 'chats.User'
 
 
 AUTH_PASSWORD_VALIDATORS = [
