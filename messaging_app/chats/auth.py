@@ -3,5 +3,4 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-# You can import and re-export these for urls if preferred
 __all__ = ['TokenObtainPairView', 'TokenRefreshView']
