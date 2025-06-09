@@ -5,7 +5,6 @@ __pycache__
 *.pyd
 *.db
 *.sqlite3
-*.log
 *.egg
 *.egg-info
 *.dist-info
