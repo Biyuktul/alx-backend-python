@@ -18,4 +18,3 @@ class MessageHistory(models.Model):
     message = models.ForeignKey(Message, related_name='history', on_delete=models.CASCADE)
     old_content = models.TextField()
     edited_at = models.DateTimeField(auto_now_add=True)
-    edited_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='editor', on_delete=models.CASCADE)
