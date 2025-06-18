@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'chats',
     'rest_framework_simplejwt',
     'django_filters',
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
