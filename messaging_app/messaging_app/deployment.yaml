@@ -18,7 +18,7 @@ spec:
         - name: messaging-app
           image: messaging_app-web:latest
           ports:
-            - containerPort: 8000  # Django default port, change if needed
+            - containerPort: 8000
 
 ---
 apiVersion: v1
