@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Starting kubrenetes cluster using Minikube..."
-Minikube start
+minikube start
 
 if [ $? -ne 0 ]; then
     echo "Faild to start minikube. Exiting."
