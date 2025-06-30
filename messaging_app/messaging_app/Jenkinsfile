@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    environment {
+        GITHUB_CREDS = credentials('github-creds')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: "${GITHUB_CREDS}", url: 'https://github.com/Biyuktul/alx-backend-python/tree/main/messaging_app', branch: 'main'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                withPythonEnv('venv') {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                withPythonEnv('venv') {
+                    sh 'pytest --junitxml=report.xml'
+                }
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+    }
+    options {
+        disableConcurrentBuilds()
+    }
+}
