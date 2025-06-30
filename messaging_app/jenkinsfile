@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python:3.10' }
+    }
     environment {
         DOCKERHUB_CREDS = credentials('100a7508-2150-47ab-ba05-022dd95aaeca') 
         IMAGE_NAME = "biyuktul/messaging-app"
