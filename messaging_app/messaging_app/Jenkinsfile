@@ -1,7 +1,9 @@
 pipeline {
     agent any
     environment {
-        GITHUB_CREDS = credentials('github-creds')
+        GITHUB_CREDS = credentials('57304e01-abda-41a5-b015-3b2fd256b958')
+        DOCKERHUB_CREDS = credentials('100a7508-2150-47ab-ba05-022dd95aaeca') 
+        IMAGE_NAME = "biyuktul/messaging-app"
     }
     stages {
         stage('Checkout') {
@@ -18,7 +20,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 withPythonEnv('venv') {
-                    sh 'pip3 install -r messaging_app/requirements.txt'
+                    sh 'pip3 install -r requirements.txt'
                 }
             }
         }
@@ -34,8 +36,26 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', "${DOCKERHUB_CREDS}") {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
     }
-    options {
-        disableConcurrentBuilds()
+    post {
+        always {
+            archiveArtifacts artifacts: 'report.xml', fingerprint: true
+        }
     }
 }
