@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: "${GITHUB_CREDS}", url: 'https://github.com/yourusername/messaging-app.git', branch: 'main'
+                git credentialsId: "${GITHUB_CREDS}", url: 'https://github.com/Biyuktul/alx-backend-python/tree/main/messaging_app', branch: 'main'
             }
         }
         stage('Install Dependencies') {
