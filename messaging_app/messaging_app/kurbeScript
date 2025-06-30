@@ -11,7 +11,7 @@ fi
 echo "Verifying cluster info..."
 kubectl cluster-info
 
-if [$> -ne 0]; then
+if [ $> -ne 0 ]; then
     echo "kubectl failed to retrive cluster info. Exiting."
     exit 1
 fi
