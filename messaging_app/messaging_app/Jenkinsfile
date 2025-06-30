@@ -9,6 +9,12 @@ pipeline {
                 git credentialsId: "${GITHUB_CREDS}", url: 'https://github.com/Biyuktul/alx-backend-python/tree/main/messaging_app', branch: 'main'
             }
         }
+        stage('Show Git Branch') {
+            steps {
+                sh 'git branch'
+                sh 'echo "Current branch is $GIT_BRANCH"'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 withPythonEnv('venv') {
