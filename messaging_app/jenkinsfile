@@ -1,7 +1,6 @@
 pipeline {
     agent any
     environment {
-        GITHUB_CREDS = credentials('57304e01-abda-41a5-b015-3b2fd256b958')
         DOCKERHUB_CREDS = credentials('100a7508-2150-47ab-ba05-022dd95aaeca') 
         IMAGE_NAME = "biyuktul/messaging-app"
     }
