@@ -1,0 +1,64 @@
+pipeline {
+    agent {
+        docker { image 'python:3.10' }
+    }
+    environment {
+        DOCKERHUB_CREDS = credentials('100a7508-2150-47ab-ba05-022dd95aaeca') 
+        IMAGE_NAME = "biyuktul/messaging-app"
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Biyuktul/alx-backend-python.git', branch: 'main'
+            }
+        }
+        stage('Show Git Branch') {
+            steps {
+                sh 'git branch'
+                sh 'echo "Current branch is $GIT_BRANCH"'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install -r requirements.txt
+                '''
+            }
+}
+        stage('Run Tests') {
+            steps {
+                withPythonEnv('venv') {
+                    sh 'pytest --junitxml=report.xml'
+                }
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('', "${DOCKERHUB_CREDS}") {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'report.xml', fingerprint: true
+        }
+    }
+}
