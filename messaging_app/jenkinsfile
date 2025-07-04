@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.12'
+        }
+    }
     stages {
         stage('Checkout Code') {
             steps {
@@ -9,7 +13,7 @@ pipeline {
         stage('Setting Up Environment') {
             steps {
                 sh '''
-                    python3 -m venv venv
+                    python -m venv venv
                     . venv/bin/activate
                     pip install -r requirements.txt
                 '''
@@ -19,7 +23,7 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    python3 manage.py migrate
+                    python manage.py migrate
                 '''
             }
         }
