@@ -1,18 +1,21 @@
 pipeline {
-    agent any
+    agent { dockerfile true }
+  // agent { 
+  //   docker { 
+  //     image 'python:alpine3.7'
+  //     args '-p 5000:5000'
+  //       } 
+  // }
     stages {
         stage('checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Biyuktul/alx-backend-python.git'
             }
         }
-        stage('Setting Up Environment') {
+        stage('Python Version') {
             steps {
                 sh '''
-                    python -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+                    python3 --vesion
                 '''
             }
         }
