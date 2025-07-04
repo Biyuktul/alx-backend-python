@@ -1,41 +1,40 @@
 pipeline {
     agent any
-
-    environment {
-        VENV = "venv"
-    }
-
     stages {
-        stage('Clone Repo') {
+        stage('checkout Code') {
             steps {
-                git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/Wmugacha/alx-backend-python.git'
+                git branch: 'main', url: 'https://github.com/Biyuktul/alx-backend-python.git'
             }
         }
-
-        stage('Install Dependencies') {
+        stage('Setting Up Environment') {
             steps {
-                dir('messaging_app') {
-                    sh '''
-                        python3 -m venv venv
-                        ./venv/bin/python -m ensurepip --upgrade
-                        ./venv/bin/python -m pip install --upgrade pip
-                        ./venv/bin/python -m pip install -r requirements.txt
-                    '''
+                sh '''
+                    python -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python manage.py migrate
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pytest --junitxml=report.xml
+                '''
+            }
+            post {
+                always {
+                    junit 'report.xml'
                 }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                dir('messaging_app') {
-                    sh './venv/bin/pytest --junitxml=../report.xml'
-                }
-            }
-        }
-
-        stage('Publish Report') {
-            steps {
-                junit 'report.xml'
             }
         }
     }
