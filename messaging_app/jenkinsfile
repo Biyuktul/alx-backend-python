@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('checkout Code') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Biyuktul/alx-backend-python.git'
             }
@@ -10,7 +10,7 @@ pipeline {
             steps {
                 dir('messaging_app') {
                     sh '''
-                        source venv/bin/activate
+                        python3 -m venv venv
                         . venv/bin/activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
@@ -20,22 +20,26 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''
-                    source venv/bin/activate
-                    python3 manage.py migrate
-                '''
+                dir('messaging_app') {
+                    sh '''
+                        . venv/bin/activate
+                        python3 manage.py migrate
+                    '''
+                }
             }
         }
         stage('Test') {
             steps {
-                sh '''
-                    source venv/bin/activate
-                    pytest --junitxml=report.xml
-                '''
+                dir('messaging_app') {
+                    sh '''
+                        . venv/bin/activate
+                        pytest --junitxml=report.xml
+                    '''
+                }
             }
             post {
                 always {
-                    junit 'report.xml'
+                    junit 'messaging_app/report.xml'
                 }
             }
         }
