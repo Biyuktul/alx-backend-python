@@ -18,16 +18,6 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                dir('messaging_app') {
-                    sh '''
-                        . venv/bin/activate
-                        python3 manage.py migrate
-                    '''
-                }
-            }
-        }
         stage('Test') {
             steps {
                 dir('messaging_app') {
