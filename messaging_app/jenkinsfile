@@ -1,20 +1,17 @@
 pipeline {
-    agent any
-
-    environment {
-        VENV = "venv"
-        IMAGE_NAME = 'Wmugacha/messaging-app'
-        TAG = "${new Date().format('yyyyMMddHHmmss')}"
-        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
-    }
-
+    agent { dockerfile true }
+  // agent { 
+  //   docker { 
+  //     image 'python:alpine3.7'
+  //     args '-p 5000:5000'
+  //       } 
+  // }
     stages {
-        stage('Clone Repo') {
+        stage('checkout Code') {
             steps {
-                git branch: 'main', credentialsId: 'github-creds', url: 'https://github.com/Wmugacha/alx-backend-python.git'
+                git branch: 'main', url: 'https://github.com/Biyuktul/alx-backend-python.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 dir('messaging_app') {
@@ -27,37 +24,24 @@ pipeline {
                 }
             }
         }
-
-        stage('Run Tests') {
+        stage('Build') {
             steps {
-                dir('messaging_app') {
-                    sh './venv/bin/pytest --junitxml=../report.xml'
-                }
+                sh '''
+                    . venv/bin/activate
+                    python manage.py migrate
+                '''
             }
         }
-
-        stage('Publish Report') {
+        stage('Test') {
             steps {
-                junit 'report.xml'
+                sh '''
+                    . venv/bin/activate
+                    pytest --junitxml=report.xml
+                '''
             }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                dir('messaging_app') {
-                    sh 'docker build -t $IMAGE_NAME:$TAG .'
-                }
-            }
-        }
-
-        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push $IMAGE_NAME:$TAG
-                        docker logout
-                    '''
+            post {
+                always {
+                    junit 'report.xml'
                 }
             }
         }
