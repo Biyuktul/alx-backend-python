@@ -10,7 +10,7 @@ pipeline {
             steps {
                 dir('messaging_app') {
                     sh '''
-                        python3 -m venv venv
+                        source venv/bin/activate
                         . venv/bin/activate
                         pip install --upgrade pip
                         pip install -r requirements.txt
@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    . venv/bin/activate
+                    source venv/bin/activate
                     python3 manage.py migrate
                 '''
             }
@@ -29,7 +29,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
-                    . venv/bin/activate
+                    source venv/bin/activate
                     pytest --junitxml=report.xml
                 '''
             }
