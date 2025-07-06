@@ -43,9 +43,11 @@ pipeline {
         }
         stage('Push To Docker Hub') {
             steps {
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                docker.image('my-image:latest').push()
-                echo "Pushing ..."
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                    docker.image('my-image:latest').push()
+                    echo "Pushing ..."
+                }
             }
             }
         }
