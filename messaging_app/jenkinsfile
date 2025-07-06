@@ -34,5 +34,20 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build('messaging_app_image', '-f /messaging_app/Dockerfile')
+                }
+            }
+        }
+        stage('Push To Docker Hub') {
+            steps {
+                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                docker.image('my-image:latest').push()
+                echo "Pushing ..."
+            }
+            }
+        }
     }
 }
